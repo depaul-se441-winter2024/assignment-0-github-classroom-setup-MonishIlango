@@ -19,13 +19,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.x  # Specify the Python version you want to use
-
+        python-version: 3.9  
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt  # If you have a requirements.txt file for Python dependencies
-        # Or install any other dependencies your project needs
+        pip install pytest  
 
     - name: Run unit tests
       run: |
-        pytest  # Modify this command to run your unit tests for your chosen language and framework
+        pytest  
