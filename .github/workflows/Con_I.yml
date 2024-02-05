@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-       ref: assignment 1
+       ref: assignment-1
        submodules: recursive
       
 
