@@ -1,0 +1,50 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Match tags with the format 'vX.Y.Z'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with: 
+       ref : assignment-1
+       submodules: recursive
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9  
+
+   
+    - name:  unit test
+      run: |
+        pip install pytest
+        pytest unitcalculator.py
+        
+    - name: Extract version from tag
+      id: extract_version
+      run: |
+        echo "Tag: ${{ github.ref }}"
+        version=${{ github.ref }}
+        version=${version#refs/tags/v}
+        echo "::set-output name=version::$version"
+
+    - name: Publish to GitHub releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/*  # Specify the path to your built artifacts
+        tag_name: ${{ steps.extract_version.outputs.version }}
+        title: Release ${{ steps.extract_version.outputs.version }}
+        body: "Release notes for ${{ steps.extract_version.outputs.version }}"
+
+    - name: Clean up artifacts
+      run: |
+        rm -rf dist
+
